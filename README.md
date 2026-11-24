@@ -37,6 +37,8 @@ Un informe en Markdown (`auditoria-<sistema>-<fecha>.md`) con:
 - cada hallazgo con dónde, qué pasa (con el número), por qué importa, propuesta y esfuerzo;
 - lo que no se ha podido comprobar.
 
+Si lo pides, también monta el informe en una **página de Figma**: una tarjeta por hallazgo y, cuando hay algo que se pueda ver (contraste, bordes, foco, tamaños, colores casi iguales), un **ejemplo visual antes → después** con el ratio de cada lado. Los ejemplos se dibujan con las variables reales del sistema, así que también están medidos. Los hallazgos de estructura (nombres, scopes, code syntax) llevan un fragmento de código corto o nada.
+
 ## Webs: con o sin navegador
 
 Por defecto trabaja **sin navegador**: descarga el HTML y las hojas de estilo con Node. Así saca todo lo que está en el CSS, pero el contraste solo puede medirse en los pares declarados en una misma regla. No ve opacidades heredadas, texto sobre fotos ni lo que añade JavaScript, y lo indica en el informe.

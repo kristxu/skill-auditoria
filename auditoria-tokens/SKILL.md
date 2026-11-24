@@ -5,7 +5,7 @@ description: Audita todo el sistema visual de una web (su CSS) o de un archivo d
 
 # Auditoría del sistema visual (todo el CSS)
 
-Objetivo: decir con números **qué está mal en el sistema visual, dónde, cuánto importa y cómo arreglarlo**, sin tocar nada. El resultado es un informe; la página visual es opcional y la hace otra skill.
+Objetivo: decir con números **qué está mal en el sistema visual, dónde, cuánto importa y cómo arreglarlo**, sin tocar nada. El resultado es un informe en Markdown. Si se pide, también una página en Figma con cada hallazgo y su ejemplo visual antes → después (sección 6). La página de consulta de los tokens es otra cosa y la hace la skill `showcase-tokens`.
 
 Por qué así: una auditoría vale por lo accionable que es. Un hallazgo sin ubicación, sin medida o sin propuesta no ayuda a nadie a decidir. Y quien audita no debe arreglar por su cuenta: la persona tiene que ver el diagnóstico completo antes de elegir qué cambiar.
 
@@ -202,12 +202,47 @@ Escala actual con usos → escala propuesta.
 
 Agrupa hallazgos repetidos: "436 espaciados a mano con 20 valores distintos" es un único hallazgo con ejemplos, no 436. Omite las categorías del detalle que no estén en el alcance.
 
-## 6. Antes de entregar
+## 6. Página en Figma con ejemplos visuales (si se pide)
+
+Si se pide el informe en Figma, monta una página nueva con el informe: cabecera, resumen por gravedad, tokenización y hallazgos, y al final el detalle que aplique. En el informe en Markdown, enlaza cada hallazgo a su tarjeta en Figma.
+
+Por qué con ejemplos: el número dice cuánto falla, pero un ejemplo de **antes → después** enseña el problema y demuestra que la propuesta lo arregla, sin tener que imaginarlo. Se entiende de un vistazo, también para quien no sabe qué significa "1,71 : 1".
+
+**Componentes** (en una sección "_Componentes", con todo enlazado a variables):
+- `Hallazgo / Tarjeta`: variante Gravedad (Crítica, Media, Menor, Info) y propiedades de texto para ID, categoría, título, dónde, qué pasa, por qué importa, propuesta y esfuerzo.
+  - Arriba lleva una instancia anidada "Ejemplo" con dos propiedades: `Ejemplo` (INSTANCE_SWAP), para elegir el componente de ejemplo, y `Con ejemplo` (BOOLEAN), que controla su visibilidad.
+- Un componente `Ejemplo / <nombre>` por hallazgo que lo necesite: dos paneles, "Ahora" y "Propuesta", con una flecha entre ellos. Cada panel lleva debajo una etiqueta con el ratio o el dato: ✕ en rojo si falla, ✓ si pasa.
+- `Resumen / Contador` y `Badge` para la cabecera.
+
+**Cuándo lleva ejemplo.** Solo cuando hay algo que se vea. Si el ejemplo no enseña nada, apágalo con `Con ejemplo`: un ejemplo vacío confunde más que ayuda.
+
+| Tipo de hallazgo | Ejemplo |
+|---|---|
+| Contraste de texto | El texto real (palabra o frase) con el color actual sobre su fondo, y al lado la propuesta, cada uno con su ratio |
+| Bordes, foco, iconos | El control (campo, botón, anillo de foco) con el borde actual y con el propuesto |
+| Texto sobre foto | El texto sobre la zona clara, y la misma escena con la capa propuesta. Si la foto no está en el archivo, usa un fondo que la imite y dilo en la etiqueta ("zona clara de la foto") |
+| Duplicados y casi iguales | Las muestras juntas, con su ΔE |
+| Tipografía, espaciado, radios | La escala dibujada (Aa por tamaño, barras, cuadrados), con el valor que sobra o falta resaltado |
+| Tokenización | La barra con el % con variable y algunas muestras de los valores a mano |
+| Estructura: nombres, alias, scopes, code syntax, capas | Un fragmento de código corto, antes y después. Solo si aclara algo; si no, sin ejemplo |
+| Info sin fallo, exentos, no comprobado | Sin ejemplo |
+
+**Reglas de los ejemplos**
+- **Con las variables reales del sistema**, no con colores escritos a mano. Así el ejemplo también está medido, y si cambia la variable, cambia el ejemplo.
+  - Si el par depende de un tema o una placa, fija el modo en el marco del panel (`setExplicitVariableModeForCollection`).
+  - Si un color no existe como variable (fondos medidos, colores a mano, colores antiguos), créalo en una colección aparte del informe (por ejemplo "<Sistema> · Auditoría") en vez de escribirlo en la capa.
+- **Opacidad de capa:** si la web baja la opacidad del contenedor (`opacity: 0.2`), reprodúcela con la opacidad de la capa, no con la del relleno. Al enlazar una variable a un relleno, Figma pone la opacidad del relleno al alfa de la variable, así que un 20 % en el relleno se pierde.
+- **Las etiquetas repiten el número del informe:** el mismo ratio, la misma mediana. Si es una imitación (foto, estado que no se ve), dilo en la etiqueta.
+- Los ejemplos ilustran la propuesta, no la aplican: el sistema no se toca.
+
+Verifica con una captura que el ejemplo de cada tarjeta se lee y que "Ahora" y "Propuesta" se distinguen. Un fallo típico es que la opacidad no se aplique y los dos paneles salgan iguales.
+
+## 7. Antes de entregar
 
 1. Recalcula a mano 3 ratios del informe con `scripts/contraste.js` y comprueba que coinciden.
 2. Revisa que cada hallazgo tenga ubicación, número y propuesta.
-3. Comprueba que no has modificado nada: todas las llamadas han sido de lectura.
-4. Al final del mensaje, ofrece: (a) arreglar los hallazgos que elija, siguiendo la skill `accesibilidad`, y (b) montar la página de consulta con `showcase-tokens`.
+3. Comprueba que no has modificado nada del sistema. Todo ha sido de lectura, salvo la página nueva del informe si se pidió en Figma.
+4. Al final del mensaje, ofrece: (a) arreglar los hallazgos que elija, siguiendo la skill `accesibilidad`; (b) si no se pidió, entregar el informe en Figma con ejemplos visuales (sección 6); y (c) montar la página de consulta con `showcase-tokens`.
 
 ## Scripts
 
