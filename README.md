@@ -65,4 +65,4 @@ No intenta nunca saltarse un bloqueo.
 
 ## Skill relacionada
 
-[skill-showcase](https://github.com/kristxu/skill-showcase) monta en Figma la página de consulta de los tokens. Usa el script `extraer-css-url.js` de esta skill para sacar los tokens de una web, así que para showcases de webs conviene tener las dos instaladas.
+[skill-showcase](https://github.com/kristxu/skill-showcase) monta en Figma la página de consulta de los tokens. Son independientes: puedes instalar una, la otra o las dos.
