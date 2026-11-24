@@ -10,7 +10,7 @@ Skill de Claude Code que audita el sistema visual de una web (su CSS) o de un ar
 | Script | Qué hace |
 |---|---|
 | `extraer-css-url.js` | Descarga el HTML y todo el CSS de una web sin navegador y saca variables, temas, tokenización, colores, tamaños fluidos a 1440 y 375 px, breakpoints, foco, zoom y movimiento |
-| `extraer-css-web.js` | Lo mismo desde un navegador, con valores calculados y contraste medido. Solo se usa si la web bloquea la descarga y eliges usar el MCP de Playwright |
+| `extraer-css-web.js` | Lo mismo desde un navegador, con valores calculados y contraste medido. Solo se usa si pides el MCP de Playwright, o si la web bloquea la descarga y lo eliges |
 | `contraste.js` | Ratio WCAG 2.2 con transparencias, nivel y texto grande |
 | `duplicados.js` | Colores duplicados, casi iguales (ΔE < 3) y familias de transparencias con bases distintas |
 | `escalas.js` | Espaciados, radios, tamaños o duraciones fuera de escala y escala propuesta |
@@ -41,7 +41,9 @@ Si lo pides, también monta el informe en una **página de Figma**: una tarjeta 
 
 ## Webs: con o sin navegador
 
-Por defecto trabaja **sin navegador**: descarga el HTML y las hojas de estilo con Node. Así saca todo lo que está en el CSS, pero el contraste solo puede medirse en los pares declarados en una misma regla. No ve opacidades heredadas, texto sobre fotos ni lo que añade JavaScript, y lo indica en el informe.
+Por defecto trabaja **sin navegador**: descarga el HTML y las hojas de estilo con Node. Así saca todo lo que está en el CSS, pero el contraste solo puede medirse en los pares declarados en una misma regla. No ve opacidades heredadas, texto sobre fotos ni lo que añade JavaScript, y lo avisa en el resumen del informe.
+
+**Para auditorías, el navegador sale a cuenta:** el contraste se mide sobre lo que se ve en pantalla, que es donde suelen estar los fallos críticos. Pídelo directamente, por ejemplo *"audita https://… con el MCP de Playwright"*, y la skill irá por ese camino desde el principio.
 
 Si la web bloquea la descarga (por ejemplo, con un sistema antibots), la skill te avisa y te propone qué hacer:
 1. **Usar el MCP de Playwright (recomendado):** abre la web en un navegador de verdad y mide también el contraste real.

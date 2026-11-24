@@ -22,7 +22,8 @@ Por qué así: una auditoría vale por lo accionable que es. Un hallazgo sin ubi
 Si la petición no deja claro qué revisar, pregunta antes de empezar: qué web o archivo, qué páginas, y si quieres **todo** o solo algunas categorías (color, tipografía, espaciado…). Por defecto se audita todo.
 
 **Web**
-- Ejecuta `node ~/.claude/skills/auditoria-tokens/scripts/extraer-css-url.js <url> <carpeta>`, con la carpeta en el scratchpad. Descarga el HTML y todas las hojas de estilo (también las de otro dominio y las de `@import`), las guarda en `<carpeta>/css/` y escribe `<carpeta>/extraccion.json`. No necesita navegador ni instalar nada.
+- **Si la persona pide usar el MCP de Playwright** (o "con navegador"), no descargues con Node: ve directamente al camino de Playwright del paso 3 de "Si no se puede conectar". Si el MCP no está conectado en la sesión, díselo y pregunta si sigue sin navegador.
+- Si no lo pide, ejecuta `node ~/.claude/skills/auditoria-tokens/scripts/extraer-css-url.js <url> <carpeta>`, con la carpeta en el scratchpad. Descarga el HTML y todas las hojas de estilo (también las de otro dominio y las de `@import`), las guarda en `<carpeta>/css/` y escribe `<carpeta>/extraccion.json`. No necesita navegador ni instalar nada.
 - Lee primero `aviso` y `hojasFallidas`. Si hay `aviso`, para y sigue "Si no se puede conectar" (abajo). Si solo fallan algunas hojas, sigue y ponlas en "No comprobado".
 - Revisa `temas`: los selectores que redefinen muchas variables (temas por clase, "placas", modos) son modos del sistema. Audítalos todos.
 - Si la web tiene varias plantillas (home, listado, ficha, formulario), pasa el script por una URL de cada una. Si no puedes, dilo en "No comprobado".
@@ -170,6 +171,8 @@ Guarda el informe como Markdown en la carpeta de trabajo (`auditoria-<sistema>-<
 
 Los 3 hallazgos que más importan, en una línea cada uno.
 
+> (Solo en webs auditadas sin navegador) **Contraste sin medir en pantalla:** los ratios salen del CSS declarado. Faltan el texto sobre fotos o degradados, las opacidades heredadas y lo que añade JavaScript, que es donde suelen estar los fallos críticos. Para medirlo, repite la auditoría con el MCP de Playwright.
+
 ## Nivel de tokenización
 | Categoría | Con variable | A mano | % tokenizado | Valores distintos |
 |---|---|---|---|---|
@@ -242,14 +245,14 @@ Verifica con una captura que el ejemplo de cada tarjeta se lee y que "Ahora" y "
 1. Recalcula a mano 3 ratios del informe con `scripts/contraste.js` y comprueba que coinciden.
 2. Revisa que cada hallazgo tenga ubicación, número y propuesta.
 3. Comprueba que no has modificado nada del sistema. Todo ha sido de lectura, salvo la página nueva del informe si se pidió en Figma.
-4. Al final del mensaje, ofrece: (a) arreglar los hallazgos que elija, siguiendo la skill `accesibilidad`; (b) si no se pidió, entregar el informe en Figma con ejemplos visuales (sección 6); y (c) montar la página de consulta con `showcase-tokens`.
+4. Al final del mensaje, ofrece: (a) arreglar los hallazgos que elija, siguiendo la skill `accesibilidad`; (b) si no se pidió, entregar el informe en Figma con ejemplos visuales (sección 6); (c) montar la página de consulta con `showcase-tokens`; y (d) si fue una web sin navegador, repetir el contraste con el MCP de Playwright, diciendo en una frase qué se ganaría (contraste medido sobre lo que se ve).
 
 ## Scripts
 
 | Script | Qué hace | Dónde se ejecuta |
 |---|---|---|
 | `scripts/extraer-css-url.js` | Descarga el HTML y todo el CSS de una URL: variables, temas, tokenización, colores, valores declarados por categoría, tamaños fluidos a 1440 y 375 px, pares de la misma regla, breakpoints, fuentes, foco, zoom y movimiento | node: `node extraer-css-url.js <url, página .html guardada, hoja .css o carpeta> <carpeta>` |
-| `scripts/extraer-css-web.js` | Lo mismo desde un navegador, con valores calculados y pares medidos. Solo si la web bloquea la descarga y la persona elige usar el MCP de Playwright | Herramienta del navegador que ejecuta JavaScript en la página |
+| `scripts/extraer-css-web.js` | Lo mismo desde un navegador, con valores calculados y pares medidos. Solo si la persona pide usar el MCP de Playwright, o si la web bloquea la descarga y lo elige | Herramienta del navegador que ejecuta JavaScript en la página |
 | `scripts/inventario-figma.js` | Inventario compacto de variables y estilos de texto | `use_figma` / `figma_execute` |
 | `scripts/capas-sin-enlazar.js` | Colores, espaciados, radios, bordes, sombras y tipografía sin variable ni estilo, y si coinciden con un token | `use_figma` / `figma_execute` |
 | `scripts/pares-reales.js` | Pares texto/fondo que existen en el diseño, con su peor ratio | `use_figma` / `figma_execute` (con contraste.js delante) |
