@@ -215,7 +215,8 @@ Por qué con ejemplos: el número dice cuánto falla, pero un ejemplo de **antes
 - `Hallazgo / Tarjeta`: variante Gravedad (Crítica, Media, Menor, Info) y propiedades de texto para ID, categoría, título, dónde, qué pasa, por qué importa, propuesta y esfuerzo.
   - Arriba lleva una instancia anidada "Ejemplo" con dos propiedades: `Ejemplo` (INSTANCE_SWAP), para elegir el componente de ejemplo, y `Con ejemplo` (BOOLEAN), que controla su visibilidad.
 - Un componente `Ejemplo / <nombre>` por hallazgo que lo necesite: dos paneles, "Ahora" y "Propuesta", con una flecha entre ellos. Cada panel lleva debajo una etiqueta con el ratio o el dato: ✕ en rojo si falla, ✓ si pasa.
-- `Resumen / Contador` y `Badge` para la cabecera.
+- `Resumen / Contador` para la cabecera: una tarjeta por gravedad **rellena con el color de la gravedad** (no blanca con una etiqueta pequeña), con el número grande arriba (48 px, Bold) y el nombre de la gravedad debajo (14 px, Semi Bold), sin borde y con radio 12. Por qué: el resumen tiene que leerse de un vistazo, y un bloque de color pesa más que un punto. Usa los colores de la paleta del propio sistema (rojo para Crítica, amarillo o naranja para Media, gris claro para Menor, un color frío para Info) y elige el texto blanco o negro según cuál llegue a 4,5 : 1 sobre ese fondo. Comprueba el ratio antes de montarlo.
+- `Badge` (punto de color y nombre de la gravedad) para las tarjetas de hallazgo.
 
 **Cuándo lleva ejemplo.** Solo cuando hay algo que se vea. Si el ejemplo no enseña nada, apágalo con `Con ejemplo`: un ejemplo vacío confunde más que ayuda.
 
